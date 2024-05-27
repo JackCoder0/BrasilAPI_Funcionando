@@ -1,0 +1,13 @@
+﻿@model PokemonModel
+
+<div style="height:100vh" ; class="d-flex flex-column align-items-center justify-content-center">
+    <div style="background-image:linear-gradient(#a6a6a6, #ffff);" class="d-flex flex-column align-items-center
+    justify-content-start p-5 rounded">
+        <h1 style="color: #051130; font-weight:600; " class="display-4 mb-3">Buscar Pokémon</h1>
+
+        <form method="get" asp-controller="Pokemon" asp-action="PokemonInfo" role="form">
+            <input asp-for="Nome" style="width:340px; padding:7.2px 9px; margin-right:4px; font-size:18px" class="my-4 rounded" name="name" placeholder="Digite o Id ou Nome do Pokémon" />
+            <button class="p-2 rounded text-light border-0" style="font-size:19px; font-weight:bolder" type="submit" value="Nome">Buscar</button>
+        </form>
+    </div>
+</div>

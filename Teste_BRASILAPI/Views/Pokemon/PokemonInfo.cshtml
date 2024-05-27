@@ -1,0 +1,29 @@
+﻿@model Teste_BRASILAPI.Models.PokemonModel
+
+@if (Model.Verificacao)
+{
+    <div style="height: 100vh; " class=" d-flex flex-column justify-content-start align-items-center pt-5 my-5 text-light  ">
+        <h1 class="text-center mb-5"> Segue mais informaçoes sobre o CEP buscado:</h1>
+
+        <form asp-controller="Pokemon" asp-action="PokemonInfo">
+            <div style="background-image:linear-gradient(#a6a6a6, #ffff);" class="d-flex flex-column align-items-center
+            justify-content-start  pt-5 pb-4 px-5 rounded">
+                <h3 style="color: #051130; font-weight:700;" class="mb-5"> POKÉMON: <span style="color:white;"> @Model.Nome </span> </h3>
+                <p><img src="@Model.Sprite.Other.OfficialArtwork.FrontDefault" style="width:200px;"/></p>
+                <p> Id: <span style="color:#EF6B48; font-weight:600">@Model.Id</span> </p>
+                <p> Altura: <span style="color:#EF6B48; font-weight:600">@Model.Altura</span></p>
+                <p> Peso: <span style="color:#EF6B48; font-weight:600">@Model.Peso</span></p>
+                <p> Tipos: <span style="color:#EF6B48; font-weight:600">@tipo.Type?.Name</span></p>
+
+                <button asp-controller="Home" asp-action="Index" class="rounded px-4 py-1 text-light mt-4 border-0" style="font-size: 24px;" type="submit"> Voltar </button>
+            </div>
+        </form>
+
+    </div>
+
+}
+else
+{
+    <h2> @Model.ErrorMessage</h2>
+
+}

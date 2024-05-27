@@ -10,6 +10,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<EnderecoService>();
+builder.Services.AddSingleton<PokemonService>();
 
 
 var app = builder.Build();
