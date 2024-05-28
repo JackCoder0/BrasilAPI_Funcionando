@@ -2,36 +2,38 @@
 
 @if (Model.Verificacao)
 {
-	<div style="height: 100vh; " class=" d-flex flex-column justify-content-start align-items-center pt-5 my-5 text-light  ">
-		<h1 class="text-center mb-5"> Segue mais informaçoes sobre o Pokémon buscado:</h1>
+    <div style="height: 100vh; " class=" d-flex flex-column justify-content-start align-items-center pt-5 my-5 text-light  ">
+        <h1 class="text-center mb-5"> Segue mais informaçoes sobre o Pokémon buscado:</h1>
 
-		<form method="get" asp-controller="Pokemon" asp-action="PokemonInfo" role="form">
-			<input asp-for="Nome" style="width:340px; padding:7.2px 9px; margin-right:4px; font-size:18px" class="my-4 rounded" name="name" placeholder="Digite o Id ou Nome do Pokémon" />
-			<button class="p-2 rounded text-light border-0" style="font-size:19px; font-weight:bolder" type="submit" value="Nome">Buscar</button>
-		</form>
+        <form method="get" asp-controller="Pokemon" asp-action="PokemonInfo" role="form">
+            <input asp-for="Nome" style="width:340px; padding:7.2px 9px; margin-right:4px; font-size:18px" class="my-4 rounded" name="name" placeholder="Digite o Id ou Nome do Pokémon" />
+            <button class="p-2 rounded text-light border-0" style="font-size:19px; font-weight:bolder" type="submit" value="Nome">Buscar</button>
+        </form>
 
-		<form asp-controller="Pokemon" asp-action="PokemonInfo">
-			<div style="background-image:linear-gradient(#a6a6a6, #ffff);" class="d-flex flex-column align-items-center
+        <form asp-controller="Pokemon" asp-action="PokemonInfo">
+            <div style="background-image:linear-gradient(#a6a6a6, #ffff);" class="d-flex flex-column align-items-center
             justify-content-start  pt-5 pb-4 px-5 rounded">
-				<h3 style="color: #051130; font-weight:700;" class="mb-5"> POKÉMON: <span style="color:white;"> @Model.Nome </span> </h3>
-				<p><img src="@Model.Sprite.Other.OfficialArtwork.FrontDefault" style="width:300px;" /></p>
-				<p> Id: <span style="color:#EF6B48; font-weight:600">@Model.Id</span> </p>
-				<p> Altura: <span style="color:#EF6B48; font-weight:600">@Model.Altura</span></p>
-				<p> Peso: <span style="color:#EF6B48; font-weight:600">@Model.Peso</span></p>
-				@foreach (var tipo in Model.Tipos)
-				{
-					<span style="color:#EF6B48; font-weight:600">@tipo.Type.Name</span>
-				}
+                <h3 style="color: #051130; font-weight:700;" class="mb-5">
+                    POKÉMON: <span style="color:#fff;">@Model.Nome.ToUpper()</span>
+                </h3>
+                <p><img src="@Model.Sprite.Other.OfficialArtwork.FrontDefault" style="width:300px;" /></p>
+                <p> Id: <span style="color:#EF6B48; font-weight:600">@Model.Id</span> </p>
+                <p> Altura: <span style="color:#EF6B48; font-weight:600">@Model.Altura</span></p>
+                <p> Peso: <span style="color:#EF6B48; font-weight:600">@Model.Peso</span></p>
+                @foreach (var tipo in Model.Tipos)
+                {
+                    <span style="color:#EF6B48; font-weight:600">@tipo.Type.Name</span>
+                }
 
-				<button asp-controller="Home" asp-action="Index" class="rounded px-4 py-1 text-light mt-4 border-0" style="font-size: 24px;" type="submit"> Voltar </button>
-			</div>
-		</form>
+                <button asp-controller="Home" asp-action="Index" class="rounded px-4 py-1 text-light mt-4 border-0" style="font-size: 24px;" type="submit"> Voltar </button>
+            </div>
+        </form>
 
-	</div>
+    </div>
 
 }
 else
 {
-	<h2> @Model.ErrorMessage</h2>
+    <h2> @Model.ErrorMessage</h2>
 
 }
