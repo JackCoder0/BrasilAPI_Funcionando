@@ -1,4 +1,4 @@
 1- Fazer com que a primeira letra seja maiuscula e não dê erro.
 2- Fazer com que a altura e peso sejam float.
 3- Mudar Layout do Site;(Desenhar como se fosse uma carta de PKM TCG).
-4- Fazer com que os tipos aparecam imagens.
+4- Fazer com que os tipos aparecam imagens
