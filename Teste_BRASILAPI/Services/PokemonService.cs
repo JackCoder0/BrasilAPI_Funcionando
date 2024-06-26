@@ -25,6 +25,7 @@ public class PokemonService : IPokemon
 				await AdicionarEvolucoes(client, objResponse);
 				// Busca informações de variantes
 				await AdicionarVariantes(client, objResponse);
+				objResponse.IconUrl = GetPokemonIconUrl(objResponse.Id);
 
 				return objResponse;
 			}
@@ -104,6 +105,30 @@ public class PokemonService : IPokemon
 	{
 		var id = speciesUrl.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries).Last();
 		return $"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{id}.png";
+	}
+
+	private string GetPokemonIconUrl(int pokemonId)
+	{
+		string defaultSpriteUrl = $"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{pokemonId}.png";
+		string generationVIIIIconUrl = $"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-viii/icons/{pokemonId}.png";
+
+		// Verifica se o ícone da geração VIII existe, se não, retorna a sprite padrão
+		if (PokemonIconExists(generationVIIIIconUrl))
+		{
+			return generationVIIIIconUrl;
+		}
+		else
+		{
+			return defaultSpriteUrl;
+		}
+	}
+	private bool PokemonIconExists(string url)
+	{
+		using (var client = new HttpClient())
+		{
+			var response = client.GetAsync(url).Result; // Síncrono para simplificar
+			return response.IsSuccessStatusCode;
+		}
 	}
 }
 #endregion

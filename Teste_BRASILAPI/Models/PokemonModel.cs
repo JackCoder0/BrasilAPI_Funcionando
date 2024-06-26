@@ -24,6 +24,7 @@ public class PokemonModel
 
 	[JsonPropertyName("officialArtworkUrl")]
 	public string? OfficialArtworkUrl { get; set; }
+	public string? IconUrl { get; set; }
 	public bool Verificacao { get; set; }
 	public string? ErrorMessage { get; set; }
 	public List<Evolution>? Evolutions { get; set; }
@@ -73,12 +74,14 @@ public class Evolution
 {
 	public string? Name { get; set; }
 	public string? ImageUrl { get; set; }
+	public string? Id { get; set; }
 }
 
 public class Variant
 {
 	public string? Name { get; set; }
 	public string? ImageUrl { get; set; }
+	public string? Id { get; set; }
 }
 
 public class SpeciesModel
