@@ -84,8 +84,10 @@ else
 <script>
 	//#region Função que adiciona a cor do tipo no fundo
 	// Função para definir a cor do gradiente radial com base no tipo do Pokémon
-	function setGradientColor(tipoPrincipal) {
+	function setGradientColor(tipoPrincipal, selector) {
+		const bodyPkm = document.querySelector('body');
 		const cardPokemon = document.querySelector('.card-pokemon');
+		const iconPokemon = document.querySelector('.pkm-icon');
 		let gradientColor;
 		switch (tipoPrincipal) {
 			case 'normal':
@@ -148,9 +150,12 @@ else
 		}
 		// Aplica a cor no gradiente radial
 		cardPokemon.style.backgroundImage = `url(/images/half-pokeball.svg), radial-gradient(80% 80% at 50% bottom, ${gradientColor}, rgba(6, 14, 32, 0.8))`;
+		iconPokemon.style.backgroundImage = `url(), radial-gradient(80% 80% at 50% bottom, ${gradientColor}, rgba(6, 14, 32, 0.8))`;
+		bodyPkm.style.backgroundImage = `url(), radial-gradient(80% 80% at 50% top, ${gradientColor}, rgba(6, 14, 32, 0.8))`;
 	}
 	// Chamada inicial para definir a cor com base no tipo principal do Pokémon
-	setGradientColor('@Model.TipoPrincipal');
+	setGradientColor('@Model.TipoPrincipal', '.card-pokemon');
+	setGradientColor('@Model.TipoPrincipal', '.pkm-icon');
 	//#endregion
 	//#region Função para retornar evolução selecionada
 	function selecionarPokemon(nomePokemon) {
@@ -169,7 +174,6 @@ else
 
 				// Submete o formulário para o controller
 				form.submit();
-				console.log(nomePokemon);
 			} else {
 				console.error('Elemento input[name="name"] não encontrado.');
 			}
@@ -179,6 +183,7 @@ else
 	}
 	//#endregion
 </script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel/slick/slick.min.js"></script>
 
 <style>
 	i {
@@ -198,6 +203,14 @@ else
 
 	.pkm-icon {
 		width: 100px;
+		margin-top: 10px;
+		margin-left: 80%;
+		padding: 10px;
+		border-radius: 100%;
+		border: 3px solid #fff;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 
 	.hw {

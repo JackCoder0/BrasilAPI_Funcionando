@@ -41,75 +41,135 @@ public class PokemonService : IPokemon
 	#region Evoluções e Variantes
 	private async Task AdicionarEvolucoes(HttpClient client, PokemonModel pokemon)
 	{
-		var response = await client.GetAsync($"https://pokeapi.co/api/v2/pokemon-species/{pokemon.Id}");
-		var content = await response.Content.ReadAsStringAsync();
-		var species = JsonSerializer.Deserialize<SpeciesModel>(content);
+		try
+		{
+			var response = await client.GetAsync($"https://pokeapi.co/api/v2/pokemon-species/{pokemon.Id}");
+			var content = await response.Content.ReadAsStringAsync();
+			var species = JsonSerializer.Deserialize<SpeciesModel>(content);
 
-		var evolutionChainUrl = species.EvolutionChain.Url;
-		response = await client.GetAsync(evolutionChainUrl);
-		content = await response.Content.ReadAsStringAsync();
-		var evolutionChain = JsonSerializer.Deserialize<EvolutionChainModel>(content);
+			var evolutionChainUrl = species.EvolutionChain.Url;
+			response = await client.GetAsync(evolutionChainUrl);
+			content = await response.Content.ReadAsStringAsync();
+			var evolutionChain = JsonSerializer.Deserialize<EvolutionChainModel>(content);
 
-		var evolutions = new List<Evolution>();
-		AddEvolutions(evolutionChain.Chain, evolutions, pokemon.Nome.ToLower());
+			var evolutions = new List<Evolution>();
+			AddEvolutions(evolutionChain.Chain, evolutions, pokemon.Nome.ToLower());
 
-		pokemon.Evolutions = evolutions;
+			pokemon.Evolutions = evolutions;
+		}
+		catch (Exception ex)
+		{
+			pokemon.ErrorMessage = "Erro ao adicionar evoluções: " + ex.Message;
+		}
 	}
 
 	private void AddEvolutions(ChainLink chain, List<Evolution> evolutions, string currentPokemonName)
 	{
-		if (chain.Species.Name != currentPokemonName)
+		try
 		{
-			var evolution = new Evolution
+			if (chain.Species.Name != currentPokemonName)
 			{
-				Name = chain.Species.Name,
-				ImageUrl = GetPokemonImageUrl(chain.Species.Url)
-			};
-			evolutions.Add(evolution);
-		}
+				var id = ExtractIdFromUrl(chain.Species.Url);
 
-		foreach (var evolvesTo in chain.EvolvesTo)
+				var evolution = new Evolution
+				{
+					Name = chain.Species.Name,
+					ImageUrl = GetPokemonImageUrl(id)
+				};
+				evolutions.Add(evolution);
+			}
+
+			foreach (var evolvesTo in chain.EvolvesTo)
+			{
+				AddEvolutions(evolvesTo, evolutions, currentPokemonName);
+			}
+		}
+		catch (Exception ex)
 		{
-			AddEvolutions(evolvesTo, evolutions, currentPokemonName);
+			Console.WriteLine("Erro ao adicionar evolução: " + ex.Message);
+		}
+	}
+
+	private int ExtractIdFromUrl(string url)
+	{
+		try
+		{
+			var id = url.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries).Last();
+			return int.Parse(id);
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine("Erro ao extrair ID da URL: " + ex.Message);
+			throw;
 		}
 	}
 
 	private async Task AdicionarVariantes(HttpClient client, PokemonModel pokemon)
 	{
-		var response = await client.GetAsync($"https://pokeapi.co/api/v2/pokemon-species/{pokemon.Id}");
-		var content = await response.Content.ReadAsStringAsync();
-		var species = JsonSerializer.Deserialize<SpeciesModel>(content);
-
-		var variants = new List<Variant>();
-		foreach (var variety in species.Varieties)
+		try
 		{
-			if (variety.Pokemon.Name != pokemon.Nome.ToLower())
-			{
-				var variantId = await GetPokemonId(client, variety.Pokemon.Name);
-				variants.Add(new Variant { Name = variety.Pokemon.Name, ImageUrl = GetPokemonImageUrl(variantId.ToString()) });
-			}
-		}
+			var response = await client.GetAsync($"https://pokeapi.co/api/v2/pokemon-species/{pokemon.Id}");
+			var content = await response.Content.ReadAsStringAsync();
+			var species = JsonSerializer.Deserialize<SpeciesModel>(content);
 
-		pokemon.Variants = variants;
+			var variants = new List<Variant>();
+			foreach (var variety in species.Varieties)
+			{
+				if (variety.Pokemon.Name != pokemon.Nome.ToLower())
+				{
+					var variantId = await GetPokemonId(client, variety.Pokemon.Name);
+					variants.Add(new Variant { Name = variety.Pokemon.Name, ImageUrl = GetPokemonImageUrl(variantId) });
+				}
+			}
+
+			pokemon.Variants = variants;
+		}
+		catch (Exception ex)
+		{
+			pokemon.ErrorMessage = "Erro ao adicionar variantes: " + ex.Message;
+		}
 	}
 
 	private async Task<int> GetPokemonId(HttpClient client, string name)
 	{
-		var response = await client.GetAsync($"https://pokeapi.co/api/v2/pokemon/{name}");
-		var content = await response.Content.ReadAsStringAsync();
-		var pokemon = JsonSerializer.Deserialize<PokemonModel>(content);
-		return pokemon.Id;
+		try
+		{
+			var response = await client.GetAsync($"https://pokeapi.co/api/v2/pokemon/{name}");
+			var content = await response.Content.ReadAsStringAsync();
+			var pokemon = JsonSerializer.Deserialize<PokemonModel>(content);
+			return pokemon.Id;
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine("Erro ao obter ID do Pokémon: " + ex.Message);
+			throw;
+		}
 	}
 
-	private string GetPokemonImageUrl(string speciesUrl)
+	private string GetPokemonImageUrl(int id)
 	{
-		var id = speciesUrl.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries).Last();
-		return $"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{id}.png";
+		try
+		{
+			return $"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{id}.png";
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine("Erro ao obter URL da imagem do Pokémon: " + ex.Message);
+			throw;
+		}
 	}
 
 	private string GetPokemonIconUrl(int pokemonId)
 	{
-		return $"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{pokemonId}.png";
+		try
+		{
+			return $"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{pokemonId}.png";
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine("Erro ao obter URL do ícone do Pokémon: " + ex.Message);
+			throw;
+		}
 	}
+	#endregion
 }
-#endregion
