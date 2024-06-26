@@ -12,7 +12,7 @@
 
 		<form id="pokemonForm" method="get" asp-controller="Pokemon" asp-action="PokemonInfo">
 			<div class="container card-pokemon bg-img">
-				<img src="@Model.IconUrl" alt="Ícone do Pokémon" />
+				<img class="pkm-icon" src="@Model.IconUrl" />
 				<h3>#@Model.Id</h3>
 				<h3>• @Model.Nome.ToUpper() •</h3>
 				<img class="pkm-img" src="@Model.Sprite.Other.OfficialArtwork.FrontDefault" />
@@ -152,6 +152,7 @@ else
 	// Chamada inicial para definir a cor com base no tipo principal do Pokémon
 	setGradientColor('@Model.TipoPrincipal');
 	//#endregion
+	//#region Função para retornar evolução selecionada
 	function selecionarPokemon(nomePokemon) {
 		// Obtém o formulário pelo ID
 		const form = document.getElementById('pokemonForm');
@@ -176,6 +177,7 @@ else
 			console.error('Formulário com ID "pokemonForm" não encontrado.');
 		}
 	}
+	//#endregion
 </script>
 
 <style>
@@ -193,6 +195,10 @@ else
 		.pkm-img:hover {
 			transform: scale(1.10);
 		}
+
+	.pkm-icon {
+		width: 100px;
+	}
 
 	.hw {
 		color: #fff;

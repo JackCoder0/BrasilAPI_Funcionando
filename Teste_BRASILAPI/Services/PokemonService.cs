@@ -109,26 +109,7 @@ public class PokemonService : IPokemon
 
 	private string GetPokemonIconUrl(int pokemonId)
 	{
-		string defaultSpriteUrl = $"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{pokemonId}.png";
-		string generationVIIIIconUrl = $"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-viii/icons/{pokemonId}.png";
-
-		// Verifica se o ícone da geração VIII existe, se não, retorna a sprite padrão
-		if (PokemonIconExists(generationVIIIIconUrl))
-		{
-			return generationVIIIIconUrl;
-		}
-		else
-		{
-			return defaultSpriteUrl;
-		}
-	}
-	private bool PokemonIconExists(string url)
-	{
-		using (var client = new HttpClient())
-		{
-			var response = client.GetAsync(url).Result; // Síncrono para simplificar
-			return response.IsSuccessStatusCode;
-		}
+		return $"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{pokemonId}.png";
 	}
 }
 #endregion
