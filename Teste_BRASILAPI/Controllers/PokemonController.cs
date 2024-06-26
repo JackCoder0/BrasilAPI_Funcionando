@@ -65,6 +65,7 @@ public class PokemonController : Controller
 			else
 			{
 				pokemon.Verificacao = true;
+				pokemon.TipoPrincipal = GetTipoPrincipal(pokemon);
 			}
 		}
 		catch
@@ -78,5 +79,14 @@ public class PokemonController : Controller
 		}
 
 		return View("PokemonInfo", pokemon);
+	}
+	// Função para obter o tipo principal do Pokémon
+	private string GetTipoPrincipal(PokemonModel pokemon)
+	{
+		if (pokemon.Tipos != null && pokemon.Tipos.Count > 0)
+		{
+			return pokemon.Tipos[0].Type.Name.ToLower(); // Retorna o nome do tipo principal em minúsculas
+		}
+		return "default"; // Caso não haja tipos, retorna uma classe padrão
 	}
 }

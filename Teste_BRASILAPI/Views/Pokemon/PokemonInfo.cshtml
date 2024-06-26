@@ -4,26 +4,67 @@
 
 @if (Model.Verificacao)
 {
-	<div style="height: 100vh;" class="d-flex flex-column align-items-center justify-content-center">
+	<div class="d-flex flex-column align-items-center justify-content-center">
 		<form method="get" asp-controller="Pokemon" asp-action="PokemonInfo" role="form">
-			<input asp-for="Nome" style="width:340px; padding:7.2px 9px; margin-right:4px; font-size:18px" class="my-4 rounded" name="name" placeholder="Digite o Id ou Nome do Pokémon" />
+			<input id="nameInput" asp-for="Nome" style="width:340px; padding:7.2px 9px; margin-right:4px; font-size:18px" class="my-4 rounded" name="name" placeholder="Digite o Id ou Nome do Pokémon" />
 			<button class="p-2 rounded text-light border-0" style="font-size:19px; font-weight:bolder" type="submit" value="Nome">Buscar</button>
 		</form>
 
 		<form asp-controller="Pokemon" asp-action="PokemonInfo">
 			<div class="container card-pokemon bg-img">
+				<h3>#@Model.Id</h3>
 				<h3>• @Model.Nome.ToUpper() •</h3>
 				<img class="pkm-img" src="@Model.Sprite.Other.OfficialArtwork.FrontDefault" />
 				<div class="pkm-infos">
-					<span class="hw"><i class="uil uil-ruler"></i>@Model.Altura</span>
+					<div class="label-hw d-flex flex-column align-items-center justify-content-center">
+						<p class="d-flex align-items-center m-0 hw-text">
+							<i class="uil uil-ruler"></i> Altura
+						</p>
+						<span class="hw">@Model.Altura M</span>
+					</div>
 					<div class="pkm-types">
 						@foreach (var tipo in Model.Tipos)
 						{
 							<img src="~/images/types/@(tipo.Type.Name).png" alt="@tipo.Type.Name" title="@tipo.Type.Name" />
 						}
 					</div>
-					<span class="hw"><i class="uil uil-weight"></i>@Model.Peso</span>
+					<div class="label-hw d-flex flex-column align-items-center justify-content-center">
+						<p class="d-flex align-items-center m-0 hw-text">
+							<i class="uil uil-dumbbell"></i> Peso
+						</p>
+						<span class="hw">@Model.Peso KG</span>
+					</div>
 				</div>
+
+				<br />
+
+				@if (Model.Evolutions != null && Model.Evolutions.Any())
+				{
+					<h4>Evoluções:</h4>
+					<div class="evolutions">
+						@foreach (var evolution in Model.Evolutions)
+						{
+							<div class="evolution">
+								<img src="@evolution.ImageUrl" />
+								<span>@evolution.Name.ToUpper()</span>
+							</div>
+						}
+					</div>
+				}
+				@if (Model.Variants != null && Model.Variants.Any())
+				{
+					<h4>Variantes:</h4>
+					<div class="variants">
+						@foreach (var variant in Model.Variants)
+						{
+							<div class="variant">
+								<img src="@variant.ImageUrl" />
+								<span>@variant.Name.ToUpper()</span>
+							</div>
+						}
+					</div>
+				}
+
 			</div>
 		</form>
 	</div>
@@ -39,26 +80,107 @@ else
 	</form>
 }
 
+<script>
+	//#region Função que adiciona a cor do tipo no fundo
+	// Função para definir a cor do gradiente radial com base no tipo do Pokémon
+	function setGradientColor(tipoPrincipal) {
+		const cardPokemon = document.querySelector('.card-pokemon');
+		let gradientColor;
+		switch (tipoPrincipal) {
+			case 'normal':
+				gradientColor = 'rgb(168, 168, 120)';
+				break;
+			case 'fighting':
+				gradientColor = 'rgb(192, 48, 40)';
+				break;
+			case 'flying':
+				gradientColor = 'rgb(168, 144, 240)';
+				break;
+			case 'poison':
+				gradientColor = 'rgb(160, 64, 160)';
+				break;
+			case 'ground':
+				gradientColor = 'rgb(224, 192, 104)';
+				break;
+			case 'rock':
+				gradientColor = 'rgb(184, 160, 56)';
+				break;
+			case 'bug':
+				gradientColor = 'rgb(168, 184, 32)';
+				break;
+			case 'ghost':
+				gradientColor = 'rgb(112, 88, 152)';
+				break;
+			case 'steel':
+				gradientColor = 'rgb(184, 184, 208)';
+				break;
+			case 'fire':
+				gradientColor = 'rgb(240, 128, 48)';
+				break;
+			case 'water':
+				gradientColor = 'rgb(104, 144, 240)';
+				break;
+			case 'grass':
+				gradientColor = 'rgb(120, 200, 80)';
+				break;
+			case 'electric':
+				gradientColor = 'rgb(248, 208, 48)';
+				break;
+			case 'psychic':
+				gradientColor = 'rgb(248, 88, 136)';
+				break;
+			case 'ice':
+				gradientColor = 'rgb(152, 216, 216)';
+				break;
+			case 'dragon':
+				gradientColor = 'rgb(112, 56, 248)';
+				break;
+			case 'dark':
+				gradientColor = 'rgb(112, 88, 72)';
+				break;
+			case 'fairy':
+				gradientColor = 'rgb(238, 153, 172)';
+				break;
+			default:
+				gradientColor = 'rgb(0, 0, 0)'; // Cor padrão
+				break;
+		}
+		// Aplica a cor no gradiente radial
+		cardPokemon.style.backgroundImage = `url(/images/half-pokeball.svg), radial-gradient(80% 80% at 50% bottom, ${gradientColor}, rgba(6, 14, 32, 0.8))`;
+	}
+	// Chamada inicial para definir a cor com base no tipo principal do Pokémon
+	setGradientColor('@Model.TipoPrincipal');
+	//#endregion
+</script>
+
 <style>
 	.bg-img {
 	}
 
 	i {
 		color: #fff;
-		font-size: 30px;
+		font-size: 24px;
 	}
 
 	.pkm-img {
 		filter: drop-shadow(10px 7px 10px #000);
+		width: 350px;
 	}
 
 	.hw {
 		color: #fff;
-		font-weight: 500;
+		font-weight: 700;
 		font-size: 25px;
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		gap: 5px;
+	}
+
+	.hw-text {
+		font-size: 1rem;
+		color: #fff;
+		font-weight: 500;
 		gap: 5px;
 	}
 
@@ -86,9 +208,26 @@ else
 		border: 1px solid hsla(0,0%,100%,.2);
 		background-size: 50%, auto;
 		background-repeat: no-repeat;
-		background-image: url(/images/half-pokeball.svg), radial-gradient(80% 80% at 50% bottom);
 		width: 500px;
-		height: 650px;
 		color: #fff;
 	}
+
+	.evolutions, .variants {
+		display: flex;
+		gap: 10px;
+	}
+
+	.evolution, .variant {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+		.evolution img, .variant img {
+			width: 150px;
+		}
+
+		.evolution span, .variant span {
+			color: #fff;
+		}
 </style>
