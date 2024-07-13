@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 using Teste_BRASILAPI.Interfaces;
 using Teste_BRASILAPI.Models;
 
@@ -6,8 +7,29 @@ namespace Teste_BRASILAPI.Services;
 
 public class PokemonService : IPokemon
 {
-	#region BuscarPokemon
-	public async Task<PokemonModel> BuscarPokemon(string name)
+    public async Task<List<PokemonListItem>> GetAllPokemon()
+    {
+        var request = new HttpRequestMessage(HttpMethod.Get, "https://pokeapi.co/api/v2/pokemon?limit=1025");
+
+        using (var client = new HttpClient())
+        {
+            var response = await client.SendAsync(request);
+            var content = await response.Content.ReadAsStringAsync();
+            var pokemonListResponse = JsonSerializer.Deserialize<PokemonListResponse>(content);
+
+            // Adiciona a URL da imagem e o ID a cada Pokémon
+            foreach (var pokemon in pokemonListResponse.Results)
+            {
+                pokemon.Id = ExtractIdFromUrl(pokemon.Url);
+                pokemon.ImageUrl = GetPokemonImageUrl(pokemon.Id);
+            }
+
+            return pokemonListResponse.Results;
+        }
+    }
+
+    #region BuscarPokemon
+    public async Task<PokemonModel> BuscarPokemon(string name)
 	{
 		var request = new HttpRequestMessage(HttpMethod.Get, $"https://pokeapi.co/api/v2/pokemon/{name}");
 

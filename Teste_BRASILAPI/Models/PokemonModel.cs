@@ -155,3 +155,19 @@ public class EvolutionSpecies
 	[JsonPropertyName("url")]
 	public string Url { get; set; }
 }
+public class PokemonListResponse
+{
+	[JsonPropertyName("results")]
+	public List<PokemonListItem> Results { get; set; }
+}
+
+public class PokemonListItem
+{
+	[JsonPropertyName("name")]
+	public string Name { get; set; }
+
+	[JsonPropertyName("url")]
+	public string Url { get; set; }
+    public int Id { get; set; }
+    public string ImageUrl { get; set; }
+}

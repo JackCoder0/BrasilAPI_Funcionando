@@ -89,4 +89,11 @@ public class PokemonController : Controller
 		}
 		return "default"; // Caso não haja tipos, retorna uma classe padrão
 	}
+
+    [HttpGet("all")]
+    public async Task<IActionResult> AllPokemon()
+    {
+        var allPokemon = await _pokemonService.GetAllPokemon();
+        return View("AllPokemon", allPokemon);
+    }
 }

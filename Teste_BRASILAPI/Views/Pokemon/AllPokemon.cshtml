@@ -1,0 +1,33 @@
+﻿@model List<Teste_BRASILAPI.Models.PokemonListItem>
+
+@{
+    ViewData["Title"] = "All Pokémon";
+}
+
+<h1>All Pokémon</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Image</th>
+            <th>Number</th>
+            <th>Name</th>
+            <th>Details</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var pokemon in Model)
+        {
+            <tr>
+                <td>
+                    <img src="@pokemon.ImageUrl" alt="@pokemon.Name" width="100" height="100" />
+                </td>
+                <td>#@pokemon.Id</td>
+                <td>@pokemon.Name</td>
+                <td>
+                    <a href="@Url.Action("PokemonInfo", "Pokemon", new { name = pokemon.Name })">Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
